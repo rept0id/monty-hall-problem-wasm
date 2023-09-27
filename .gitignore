@@ -129,6 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+#wasm
 index.wasm
 index.html
 index.js
