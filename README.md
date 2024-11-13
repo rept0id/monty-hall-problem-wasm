@@ -1,4 +1,4 @@
-# monty-hall-paradox
+# monty-hall-paradox-wasm
 
 ![screenshot](https://github.com/rept0id/monty-hall-paradox/blob/main/screenshot.png)
 
