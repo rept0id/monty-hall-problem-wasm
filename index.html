@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Rust WASM Hello World</title>
+        <script type="module">
+            import init, {
+                monty_hall_problem_wasm,
+            } from "./pkg/monty_hall_problem_wasm.js";
+
+            async function run() {
+                await init(); // Initialize the WASM module
+
+                console.log(monty_hall_problem_wasm());
+            }
+
+            run();
+        </script>
+    </head>
+    <body></body>
+</html>
