@@ -2,20 +2,137 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title></title>
+        <title>Monty Hall Simulation Results</title>
         <script type="module">
             import init, {
-                monty_hall_problem_wasm,
+                monty_hall_problem_wasm as montyHallProblemWasm,
             } from "./pkg/monty_hall_problem_wasm.js";
 
-            async function run() {
-                await init(); // Initialize the WASM module
+            /*** * * ***/
 
-                console.log(monty_hall_problem_wasm());
+            function updateTable(states) {
+                const tableBody = document.getElementById("states-table-body");
+
+                tableBody.innerHTML = "";
+
+                states.forEach((state) => {
+                    const row = document.createElement("tr");
+
+                    const changeCell = document.createElement("td");
+                    changeCell.textContent = state.do_player_change
+                        ? "Yes"
+                        : "No";
+                    row.appendChild(changeCell);
+
+                    const revealCell = document.createElement("td");
+                    revealCell.textContent = state.do_host_reveal
+                        ? "Yes"
+                        : "No";
+                    row.appendChild(revealCell);
+
+                    const winsCell = document.createElement("td");
+                    winsCell.textContent = state.player_wins_count;
+                    row.appendChild(winsCell);
+
+                    tableBody.appendChild(row);
+                });
             }
 
-            run();
+            function updateChart(states) {
+                const labels = states.map(
+                    (state, index) => `State ${index + 1}`,
+                );
+                const wins = states.map((state) => state.player_wins_count);
+
+                const ctx = document.getElementById("chart").getContext("2d");
+
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "Player Wins Count",
+                                data: wins,
+                                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                                borderColor: "rgba(54, 162, 235, 1)",
+                                borderWidth: 1,
+                            },
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                            },
+                        },
+                    },
+                });
+            }
+
+            /*** * * ***/
+
+            async function main() {
+                await init(); // Initialize the WASM module
+
+                /*** * * ***/
+
+                const result = montyHallProblemWasm(); // Call the WASM module
+                const states = result.states;
+
+                /*** * * ***/
+
+                updateTable(states);
+                updateChart(states);
+
+                console.log(states);
+            }
+
+            main(); // Execute the function
         </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            table {
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }
+
+            th,
+            td {
+                padding: 8px 12px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #f4f4f4;
+            }
+
+            #chart {
+                width: 100%;
+                max-width: 600px;
+                margin: 20px auto;
+            }
+        </style>
     </head>
-    <body></body>
+    <body>
+        <h1>Monty Hall Problem Simulation Results</h1>
+
+        <h2>Simulation States</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Do Player Change?</th>
+                    <th>Do Host Reveal?</th>
+                    <th>Player Wins Count</th>
+                </tr>
+            </thead>
+            <tbody id="states-table-body"></tbody>
+        </table>
+
+        <h2>Wins Count Visualization</h2>
+        <canvas id="chart"></canvas>
+    </body>
 </html>

@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 
 use rand::Rng;
 
-use serde_json;
+use serde_wasm_bindgen::to_value;
 
 /*** * * ***/
 
@@ -94,13 +94,11 @@ pub fn simulate(simulation: &mut crate::model::model::Simulation) {
 /*** * * ***/
 
 #[wasm_bindgen]
-pub fn monty_hall_problem_wasm() -> String {
+pub fn monty_hall_problem_wasm() -> wasm_bindgen::JsValue {
     let mut simulation = crate::model::model::Simulation { states: Vec::new() };
 
     init_states_simulation(&mut simulation);
     simulate(&mut simulation);
 
-    let json = serde_json::to_string(&simulation).unwrap();
-
-    json
+    to_value(&simulation).unwrap()
 }
