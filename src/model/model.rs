@@ -18,3 +18,17 @@ pub struct State {
 pub struct Simulation {
     pub states: Vec<State>, // Use a `Vec` for a dynamically sized collection of states
 }
+
+impl Simulation {
+    pub fn new(num_states: usize) -> Self {
+        let states = (0..num_states)
+            .map(|_| State {
+                do_player_change: false,
+                do_host_reveal: false,
+                player_wins_count: 0,
+            })
+            .collect();
+
+        Simulation { states }
+    }
+}

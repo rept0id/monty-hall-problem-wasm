@@ -19,36 +19,27 @@ const DEF_CURTAINS: i32 = 3;
 /*** * * ***/
 
 fn init_states_simulation(simulation: &mut crate::model::model::Simulation) {
-    simulation.states = Vec::with_capacity(STATES as usize);
-
-    for i in 0..STATES as usize {
-        let mut state = crate::model::model::State {
-            do_player_change: false,
-            do_host_reveal: false,
-            player_wins_count: 0,
-        };
-
+    // Iterate over the states vector by index
+    for (i, state) in simulation.states.iter_mut().enumerate() {
         match i {
             0 => {
                 state.do_host_reveal = true;
-                state.do_player_change = false;
+                // state.do_player_change = false;
             }
             1 => {
                 state.do_host_reveal = true;
                 state.do_player_change = true;
             }
-            2 => {
-                state.do_host_reveal = false;
-                state.do_player_change = false;
-            }
+            // 2 => {
+            //     // state.do_host_reveal = false;
+            //     // state.do_player_change = false;
+            // }
             3 => {
-                state.do_host_reveal = false;
+                // state.do_host_reveal = false;
                 state.do_player_change = true;
             }
             _ => {}
         }
-
-        simulation.states.push(state);
     }
 }
 
@@ -95,7 +86,7 @@ pub fn simulate(simulation: &mut crate::model::model::Simulation) {
 
 #[wasm_bindgen]
 pub fn monty_hall_problem_wasm() -> wasm_bindgen::JsValue {
-    let mut simulation = crate::model::model::Simulation { states: Vec::new() };
+    let mut simulation = crate::model::model::Simulation::new(STATES as usize);
 
     init_states_simulation(&mut simulation);
     simulate(&mut simulation);
