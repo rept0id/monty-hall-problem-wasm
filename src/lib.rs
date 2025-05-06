@@ -10,55 +10,35 @@ mod model;
 
 /*** * * ***/
 
-const STATES: i32 = 4;
-
-const DEF_STATE_GAMES: i32 = 1_000_000;
-
-const DEF_CURTAINS: i32 = 3;
-
-/*** * * ***/
-
-fn set_states_cases(simulation: &mut crate::model::model::Simulation) {
-    for (i, state) in simulation.states.iter_mut().enumerate() {
-        match i {
-            0 => {
-                state.do_host_reveal = true;
-                // state.do_player_change = false;
-            }
-            1 => {
-                state.do_host_reveal = true;
-                state.do_player_change = true;
-            }
-            // 2 => {
-            //     // state.do_host_reveal = false;
-            //     // state.do_player_change = false;
-            // }
-            3 => {
-                // state.do_host_reveal = false;
-                state.do_player_change = true;
-            }
-            _ => {}
-        }
-    }
-}
-
 fn simulate(simulation: &mut crate::model::model::Simulation) {
-    let mut rng = rand::thread_rng();
+    let mut rng: rand::rngs::ThreadRng;
 
-    for _ in 0..DEF_STATE_GAMES {
-        for s in 0..STATES as usize {
-            let mut game = crate::model::model::Game {
-                win_curtain_idx: rng.gen_range(0..DEF_CURTAINS),
-                player_curtain_idx: rng.gen_range(0..DEF_CURTAINS),
-                host_curtain_idx: 0,
-            };
+    /*** * ***/
 
+    rng = rand::thread_rng();
+
+    /*** * ***/
+
+    for s in 0..(crate::model::model::CONST_STATES_MAX_IDX + 1) as usize {
+        for _ in 0..(crate::model::model::CONST_STATE_GAMES_MAX_IDX + 1) {
+            // game
+            let mut game: crate::model::model::Game;
+
+            /*** * * ***/
+
+            // game
+            game = crate::model::model::Game::new();
+
+            /*** * * ***/
+
+            // game
+            // game : do_host_reveal
             if simulation.states[s].do_host_reveal {
                 // if curtains are 3, there is only one curtain to switch to,
                 //  as the other is either the winning or the player choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if DEF_CURTAINS == 3 {
+                if (crate::model::model::CONST_CURTAINS_MAX_IDX + 1) == 3 {
                     for i in 0..3 {
                         if i == game.win_curtain_idx {
                             continue;
@@ -79,7 +59,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
                         /*** * * ***/
 
-                        n = rng.gen_range(0..DEF_CURTAINS);
+                        n = rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1));
 
                         /*** * * ***/
 
@@ -98,13 +78,13 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
                     }
                 }
             }
-
+            // game : do_player_change
             if simulation.states[s].do_player_change {
                 // if curtains are 3, there is only one curtain to switch to,
                 //  as the other is either the winning or the host choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if DEF_CURTAINS == 3 {
+                if (crate::model::model::CONST_CURTAINS_MAX_IDX + 1) == 3 {
                     for i in 0..3 {
                         if i == game.player_curtain_idx {
                             continue;
@@ -127,7 +107,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
                         /*** * * ***/
 
-                        n = rng.gen_range(0..DEF_CURTAINS);
+                        n = rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1));
 
                         /*** * * ***/
 
@@ -144,14 +124,21 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
                         /*** * * ***/
 
                         game.player_curtain_idx = n;
+
                         break;
                     }
                 }
             }
 
+            /*** * * ***/
+
+            // simulation
+            // simulation : player_wins_count (based on : game)
             if game.player_curtain_idx == game.win_curtain_idx {
                 simulation.states[s].player_wins_count += 1;
             }
+            // simulation : games
+            simulation.states[s].games += 1;
         }
     }
 }
@@ -160,10 +147,21 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
 #[wasm_bindgen]
 pub fn monty_hall_problem_wasm() -> wasm_bindgen::JsValue {
-    let mut simulation = crate::model::model::Simulation::new(STATES as usize);
+    // simulation
+    let mut simulation: crate::model::model::Simulation;
 
-    set_states_cases(&mut simulation);
+    /*** * * ***/
+
+    // simulation
+    simulation = crate::model::model::Simulation::new();
+
+    /*** * * ***/
+
+    // simulation
     simulate(&mut simulation);
 
+    /*** * * ***/
+
+    // res (based on : simulation)
     to_value(&simulation).unwrap()
 }
