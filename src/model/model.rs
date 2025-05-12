@@ -28,9 +28,9 @@ impl Game {
         /*** * ***/
 
         Self {
-            win_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)),
-            player_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)),
-            host_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)),
+            win_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)), // it's [x, y)
+            player_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)), // it's [x, y)
+            host_curtain_idx: rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1)), // it's [x, y)
         }
     }
 }
