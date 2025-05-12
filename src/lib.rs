@@ -19,8 +19,8 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
     /*** * ***/
 
-    for s in 0..(crate::model::model::CONST_STATES_MAX_IDX + 1) as usize {
-        for _ in 0..(crate::model::model::CONST_STATE_GAMES_MAX_IDX + 1) {
+    for s in 0..crate::model::model::CONST_STATES_SIZE as usize {
+        for _ in 0..crate::model::model::CONST_STATE_GAMES_SIZE {
             // game
             let mut game: crate::model::model::Game;
 
@@ -38,7 +38,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
                 //  as the other is either the winning or the player choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (crate::model::model::CONST_CURTAINS_MAX_IDX + 1) == 3 {
+                if crate::model::model::CONST_CURTAINS_SIZE == 3 {
                     for i in 0..3 {
                         if i == game.win_curtain_idx {
                             continue;
@@ -59,7 +59,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
                         /*** * * ***/
 
-                        n = rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1));
+                        n = rng.gen_range(0..crate::model::model::CONST_CURTAINS_SIZE);
 
                         /*** * * ***/
 
@@ -84,7 +84,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
                 //  as the other is either the winning or the host choosen
                 //  thus, we want a deterministic approach.
                 // else, we want a purely random approach (and not one that just picks the next).
-                if (crate::model::model::CONST_CURTAINS_MAX_IDX + 1) == 3 {
+                if crate::model::model::CONST_CURTAINS_SIZE == 3 {
                     for i in 0..3 {
                         if i == game.player_curtain_idx {
                             continue;
@@ -107,7 +107,7 @@ fn simulate(simulation: &mut crate::model::model::Simulation) {
 
                         /*** * * ***/
 
-                        n = rng.gen_range(0..(crate::model::model::CONST_CURTAINS_MAX_IDX + 1));
+                        n = rng.gen_range(0..crate::model::model::CONST_CURTAINS_SIZE);
 
                         /*** * * ***/
 
